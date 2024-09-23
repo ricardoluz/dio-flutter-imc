@@ -1,8 +1,21 @@
 import 'dart:math';
 
-(String, double) imcCalculator(double height, double weight) {
-  //
-  Map<double, String> tracks = {
+(String, double) bmiCalculator(double height, double weight) {
+  if (height == 0) {
+    throw ArgumentError("The height must be greater than zero.");
+  }
+  //TODO: Verificar parâmetro máximos e mínimos pra altura e peso.
+
+  double bmiCalculated = weight / pow(height, 2);
+
+  return (
+    bmiDescription(bmiCalculated)!,
+    double.parse(bmiCalculated.toStringAsExponential(3))
+  );
+}
+
+String bmiDescription(double bmiValue) {
+  final Map<double, String> tracks = <double, String>{
     40: "Obesidade Grau III (mórbida)",
     35: 'Obesidade Grau II (severa)',
     30: 'Obesidade Grau I',
@@ -12,21 +25,15 @@ import 'dart:math';
     16: 'Magreza moderada',
     0: "Magreza grave",
   };
-
-  if (height == 0) {
-    throw ArgumentError("The height must be greater than zero.");
+  if (bmiValue <= 0) {
+    throw ArgumentError("The value must be greater than zero.");
   }
-  //TODO: Verificar parâmetro máximos e mínimos pra altura e peso.
-
-  double imcCalculated = weight / pow(height, 2);
-
-  for (var imcValues in tracks.keys) {
-    if (imcCalculated >= imcValues) {
-      return (
-      tracks[imcValues]!,
-      double.parse(imcCalculated.toStringAsExponential(3)),
-      );
+  String bmiDescription = "";
+  for (var bmiBoundaryValue in tracks.keys) {
+    if (bmiValue >= bmiBoundaryValue) {
+      bmiDescription = tracks[bmiBoundaryValue]!;
+      break;
     }
   }
-  throw Exception("Error in imcCalculated");
+  return (bmiDescription);
 }
